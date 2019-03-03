@@ -36,9 +36,25 @@ async function start() {
   // Listen the server
   const server = app.listen(port, host)
 
+  startSocketIo(server)
+
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
     badge: true
   })
 }
+
+const startSocketIo = (server) => {
+  const io = require('socket.io').listen(server)
+
+  io.on('connection', (socket) => {
+    consola.info(`id: ${socket.id} is connected!`)
+
+    socket.on('message', (message) => {
+      consola.inf(message)
+    })
+  })
+
+}
+
 start()
